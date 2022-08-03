@@ -45,6 +45,7 @@ List of CI features:
 * jenkins push build status to Git Hub commits.
 * jenkins has build discarder and blocks concurrent builds for the same branch. 
 * maven test results saved to jenkins plugin.
+* global job timeout defined for 30 minutes to protect from having long-running builds.
 * jenkins log output for different command are redirected to *.log files. See them as job artifacts.
 ![jenkins](./docs/jenkins.jpg)
 

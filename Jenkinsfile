@@ -2,7 +2,7 @@
 pipeline {
     agent {
         kubernetes {
-            defaultContainer "maven"
+            defaultContainer "docker"
             yamlFile "jenkins.k8s.yaml"
         }
     }
@@ -63,9 +63,7 @@ pipeline {
 
         stage("Docker.Build") {
             steps {
-                container("docker") {
-                    sh "docker build -t ${env.ARTIFACTORY}/${env.DOCKER_REGISTRY}/${env.APP_NAME}:${env.version} --build-arg VERSION=${env.version} . >> $WORKSPACE/docker.build.log 2>&1"
-                }
+                sh "docker build -t ${env.ARTIFACTORY}/${env.DOCKER_REGISTRY}/${env.APP_NAME}:${env.version} --build-arg VERSION=${env.version} . >> $WORKSPACE/docker.build.log 2>&1"
             }
         }
         
@@ -85,13 +83,11 @@ pipeline {
 
                 stage("Push") {
                     steps {
-                        container("docker") {
-                            rtDockerPush(
-                                serverId: env.ARTIFACTORY_SERVER,
-                                image: "${env.ARTIFACTORY}/${env.DOCKER_REGISTRY}/${env.APP_NAME}:${env.version}",
-                                targetRepo: env.DOCKER_REGISTRY
-                            )
-                        }
+                       rtDockerPush(
+                            serverId: env.ARTIFACTORY_SERVER,
+                            image: "${env.ARTIFACTORY}/${env.DOCKER_REGISTRY}/${env.APP_NAME}:${env.version}",
+                            targetRepo: env.DOCKER_REGISTRY
+                        )
                     }
                 }
             }

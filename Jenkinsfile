@@ -89,6 +89,8 @@ pipeline {
                             image: "${env.ARTIFACTORY}/${env.DOCKER_REGISTRY}/${env.APP_NAME}:${env.version}",
                             targetRepo: env.DOCKER_REGISTRY
                         )
+
+                        currentBuild.description += "<br/> ✔️ ${env.ARTIFACTORY}/${env.DOCKER_REGISTRY}/${env.APP_NAME}:${env.version}"
                     }
                 }
             }

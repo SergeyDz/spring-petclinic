@@ -1,3 +1,4 @@
+//# Jenkins declarative pipeline for CI https://github.com/SergeyDz/spring-petclinic/tree/feature/jenkins-build
 pipeline {
     agent {
         kubernetes {
@@ -18,7 +19,7 @@ pipeline {
         APP_NAME = "jfrog/spring-petclinic"
     }
     stages {
-        stage("Checkout") {
+        stage("Git") {
             steps {
                 container("gitversion") {
                     script {
@@ -109,21 +110,11 @@ pipeline {
 
         stage("Promote") {
             steps {
-                rtAddInteractivePromotion(
-                    serverId: env.ARTIFACTORY_SERVER,
-                    targetRepo: env.DOCKER_LIVE_REGISTRY,
-                    displayName: 'Promote Docker Image',
-                    comment: 'Looks good!',
-                    sourceRepo: env.DOCKER_LIVE_REGISTRY,
-                    status: 'Released',
-                    includeDependencies: true,
-                    failFast: true,
-                    copy: true
-                )
+                addDockerPromotion()
             }
         }
 
-        stage("Meta") {
+        stage("Build Info") {
             steps {
                 rtPublishBuildInfo (
                     serverId: env.ARTIFACTORY_SERVER
@@ -138,6 +129,12 @@ pipeline {
     }
 }
 
+//############################################### Internal Methods #########################################################
+
+/**
+* Checkout source code from SCM including tags. If tag is not specified, checkout latest commit.
+* Note: this method required to correct work of GitVersion tool.
+*/
 def checkoutSCM(scm) {
     checkout([
         $class: "GitSCM",
@@ -151,6 +148,10 @@ def checkoutSCM(scm) {
     ])
 }
 
+/**
+* Calculates version depending on git state.
+* See <a href="https://github.com/GitTools/GitVersion" target="_blank">Git Version</a> for details.
+*/
 def version() {
     def gitversion = sh(script: "/tools/dotnet-gitversion", returnStdout: true)
     env.version = readJSON(text: gitversion)?.FullSemVer
@@ -161,9 +162,29 @@ def version() {
     currentBuild.description = "${env.version} by ${author}"
 }
 
+/**
+* Injects JFrog Token to maven mirror settings.xml file.
+*/
 def configureMavenSettings() {
     withCredentials([string(credentialsId: "jfrog-token", variable: "JFROG_TOKEN")]) {
         def settings = readFile file: "settings.xml"
         writeFile file: "settings.xml", text: settings.replace("JFROG_TOKEN", env.JFROG_TOKEN)
     }
+}
+
+/**
+* Hides parameters of promotion add call.
+*/
+def addDockerPromotion() {
+    rtAddInteractivePromotion(
+        serverId: env.ARTIFACTORY_SERVER,
+        targetRepo: env.DOCKER_LIVE_REGISTRY,
+        displayName: 'Promote Docker Image',
+        comment: 'Looks good!',
+        sourceRepo: env.DOCKER_LIVE_REGISTRY,
+        status: 'Released',
+        includeDependencies: true,
+        failFast: true,
+        copy: true
+    )
 }

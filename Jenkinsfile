@@ -14,6 +14,7 @@ pipeline {
         ARTIFACTORY_SERVER = "jfrog"
         ARTIFACTORY = "sergeydzyuban.jfrog.io"
         DOCKER_REGISTRY = "docker-dev"
+        DOCKER_LIVE_REGISTRY = "docker-live"
         APP_NAME = "jfrog/spring-petclinic"
     }
     stages {
@@ -31,7 +32,7 @@ pipeline {
         stage("Init"){
             steps {
                 rtServer (
-                    id: "${env.ARTIFACTORY_SERVER}",
+                    id: env.ARTIFACTORY_SERVER,
                     url: "https://${env.ARTIFACTORY}/artifactory",
                     credentialsId: "jfrog-user-password"
                 )
@@ -85,9 +86,9 @@ pipeline {
                     steps {
                         container("docker") {
                             rtDockerPush(
-                                serverId: "${env.ARTIFACTORY_SERVER}",
+                                serverId: env.ARTIFACTORY_SERVER,
                                 image: "${env.ARTIFACTORY}/${env.DOCKER_REGISTRY}/${env.APP_NAME}:${env.version}",
-                                targetRepo: "${env.DOCKER_REGISTRY}"
+                                targetRepo: env.DOCKER_REGISTRY
                             )
                         }
                     }
@@ -95,10 +96,37 @@ pipeline {
             }
         }
 
+        stage("XRay Scan") {
+            steps {
+                warnError(message: "XRay Scan failed") {
+                    xrayScan (
+                        serverId: env.ARTIFACTORY_SERVER,
+                        failBuild: false
+                    )
+                }
+            }
+        }
+
+        stage("Add Promotion") {
+            steps {
+                rtAddInteractivePromotion(
+                    serverId: env.ARTIFACTORY_SERVER,
+                    targetRepo: env.DOCKER_LIVE_REGISTRY,
+                    displayName: 'Promote Docker Image',
+                    comment: 'Looks good!',
+                    sourceRepo: env.DOCKER_LIVE_REGISTRY,
+                    status: 'Released',
+                    includeDependencies: true,
+                    failFast: true,
+                    copy: true
+                )
+            }
+        }
+
         stage("Publish") {
             steps {
                 rtPublishBuildInfo (
-                    serverId: "${env.ARTIFACTORY_SERVER}"
+                    serverId: env.ARTIFACTORY_SERVER
                 )
             }
         }

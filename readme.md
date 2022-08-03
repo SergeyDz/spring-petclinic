@@ -52,7 +52,6 @@ Jenkins instance deployed in AKS cluster using ArgoCD application, and managed a
 
 The only customization managed from Argo CD is plugins setup
 ```
-lines (19 sloc) 603 Bytes
 jenkins: 
 
   controller:
@@ -79,6 +78,17 @@ _Note_: all secrets and settings of plugins was made manually using Jenkins UI.
 
 
 ## Artifactory JFrog Configuration
+JFrog Artifactory us using as a package source for the application build and deployment.
+
+### Docker
+Dockers are pushed and pulled from the artifactory docker feeds. 
+
+### Maven 
+For performance and security purposes, maven central and spring package repositories was configured to use Artifactory as a cached proxy. 
+
+![Maven](./docs/artifactory-maven.jpg)
+
+All artifacts are scanning by xray. 
 
 ## Deployment 
 

@@ -181,7 +181,7 @@ def addDockerPromotion() {
         targetRepo: env.DOCKER_LIVE_REGISTRY,
         displayName: 'Promote Docker Image',
         comment: 'Looks good!',
-        sourceRepo: env.DOCKER_LIVE_REGISTRY,
+        sourceRepo: env.DOCKER_REGISTRY,
         status: 'Released',
         includeDependencies: true,
         failFast: true,

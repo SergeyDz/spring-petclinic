@@ -33,6 +33,8 @@ Links to components:
 ## CI Features 
 Actually CI pipeline for the current project is fully defined inside [Jenkinsfile](https://github.com/SergeyDz/spring-petclinic/blob/feature/jenkins-build/Jenkinsfile) for CI build and [build agent definition](https://github.com/SergeyDz/spring-petclinic/blob/feature/jenkins-build/jenkins.k8s.yaml).
 
+![jenkins](./docs/jenkins-blue-ocean.jpg)
+
 List of CI features:
 * [Jenkins Declarative Pipelines](https://www.jenkins.io/doc/book/pipeline/syntax/) are used for Jenkins pipeline definition as flexible and human readable DSL. 
 * [Git Version Tool](https://github.com/GitTools/GitVersion) is used to calculate unique app version depending on git state.
@@ -44,6 +46,7 @@ List of CI features:
 * jenkins has build discarder and blocks concurrent builds for the same branch. 
 * maven test results saved to jenkins plugin.
 * jenkins log output for different command are redirected to *.log files. See them as job artifacts.
+![jenkins](./docs/jenkins.jpg)
 
 
 ## Jenkins configuration 
@@ -105,5 +108,6 @@ Application [deployed](http://20.121.234.160/) to AKS kubernetes cluster.
 * Sonar Quality Gate was not added to the job. 
 * Automatic deployment to dev was not implemented as part of this pipeline.
 * Hook to start build automatically on each commit was not made.
+* Jenkins configuration as a code plugin and kubernetes secrets was not used. 
 
 <hr/>

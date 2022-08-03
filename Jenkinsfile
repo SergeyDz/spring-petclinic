@@ -68,9 +68,9 @@ pipeline {
             }
         }
         
-        stage("Parallel") {
+        stage("Pack") {
             parallel {
-                stage("SonarQube") {
+                stage("Sonar") {
                     environment {
                         scannerHome = tool "sonar"
                     }
@@ -82,7 +82,7 @@ pipeline {
                 }
                 
 
-                stage("Docker.Push") {
+                stage("Push") {
                     steps {
                         container("docker") {
                             rtDockerPush(
@@ -96,7 +96,7 @@ pipeline {
             }
         }
 
-        stage("XRay Scan") {
+        stage("XRay") {
             steps {
                 warnError(message: "XRay Scan failed") {
                     xrayScan (
@@ -107,7 +107,7 @@ pipeline {
             }
         }
 
-        stage("Add Promotion") {
+        stage("Promote") {
             steps {
                 rtAddInteractivePromotion(
                     serverId: env.ARTIFACTORY_SERVER,
@@ -123,7 +123,7 @@ pipeline {
             }
         }
 
-        stage("Publish") {
+        stage("Meta") {
             steps {
                 rtPublishBuildInfo (
                     serverId: env.ARTIFACTORY_SERVER

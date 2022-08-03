@@ -82,6 +82,8 @@ JFrog Artifactory us using as a package source for the application build and dep
 
 ### Docker
 Dockers are pushed and pulled from the artifactory docker feeds. 
+* docker-dev for some temporary storage with high retention
+* docker-live to promote and store production-ready artifacts
 
 ### Maven 
 For performance and security purposes, maven central and spring package repositories was configured to use Artifactory as a cached proxy. 
@@ -91,6 +93,9 @@ For performance and security purposes, maven central and spring package reposito
 All artifacts are scanning by xray. 
 
 ## Deployment 
+Application [deployed](http://20.121.234.160/) to AKS kubernetes cluster. 
+* [Helm](https://github.com/SergeyDz/spring-petclinic/tree/feature/jenkins-build/helm/spring-petclinic) for Kubernetes deployment 
+* [Argo Application](https://github.com/SergeyDz/spring-petclinic/tree/feature/jenkins-build/helm/spring-petclinic) to deploy the application in AKS
 
 ## Known issues
 

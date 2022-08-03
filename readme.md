@@ -40,9 +40,10 @@ List of CI features:
 * [Artifactory Plugin](https://plugins.jenkins.io/artifactory/) is using to push docker and build info to AF.
 * bash script and [dind](https://github.com/jpetazzo/dind) docker image is using to build docker image.
 * to resolve dependency from artifactory source only, maven [mirror](https://github.com/SergeyDz/spring-petclinic/tree/feature/jenkins-build/helm/spring-petclinic) feature is used.
-* jenkins push build status to Git Hub commits
+* jenkins push build status to Git Hub commits.
 * jenkins has build discarder and blocks concurrent builds for the same branch. 
 * maven test results saved to jenkins plugin.
+* jenkins log output for different command are redirected to *.log files. See them as job artifacts.
 
 
 ## Jenkins configuration 
@@ -87,8 +88,10 @@ Dockers are pushed and pulled from the artifactory docker feeds.
 
 ### Maven 
 For performance and security purposes, maven central and spring package repositories was configured to use Artifactory as a cached proxy. 
-
 ![Maven](./docs/artifactory-maven.jpg)
+
+See diagram with repositories structure
+![Maven](./docs/artifactory-maven-diagram.jpg)
 
 All artifacts are scanning by xray. 
 
@@ -98,7 +101,9 @@ Application [deployed](http://20.121.234.160/) to AKS kubernetes cluster.
 * [Argo Application](https://github.com/SergeyDz/spring-petclinic/tree/feature/jenkins-build/helm/spring-petclinic) to deploy the application in AKS
 
 ## Known issues
-
-
+* Xray scan fails with strange 403 error.
+* Sonar Quality Gate was not added to the job. 
+* Automatic deployment to dev was not implemented as part of this pipeline.
+* Hook to start build automatically on each commit was not made.
 
 <hr/>

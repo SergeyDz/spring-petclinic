@@ -8,7 +8,7 @@ image:
   repository: sergeydzyuban.jfrog.io/docker-dev/jfrog/spring-petclinic
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "2.7.1-jenkins-build.118"
+  tag: "2.7.1-jenkins-build.141"
 
 imagePullSecrets: 
  - name: jfrog

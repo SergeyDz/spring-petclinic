@@ -84,13 +84,15 @@ pipeline {
 
                 stage("Push") {
                     steps {
-                       rtDockerPush(
-                            serverId: env.ARTIFACTORY_SERVER,
-                            image: "${env.ARTIFACTORY}/${env.DOCKER_REGISTRY}/${env.APP_NAME}:${env.version}",
-                            targetRepo: env.DOCKER_REGISTRY
-                        )
-
-                        currentBuild.description += "<br/> ✔️ ${env.ARTIFACTORY}/${env.DOCKER_REGISTRY}/${env.APP_NAME}:${env.version}"
+                        script{
+                            def tag = "${env.ARTIFACTORY}/${env.DOCKER_REGISTRY}/${env.APP_NAME}:${env.version}"
+                            rtDockerPush(
+                                serverId: env.ARTIFACTORY_SERVER,
+                                image: tag,
+                                targetRepo: env.DOCKER_REGISTRY
+                            )
+                            currentBuild.description += "<br/> ✔️ ${tag}"
+                        }
                     }
                 }
             }

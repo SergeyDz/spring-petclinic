@@ -91,7 +91,7 @@ pipeline {
                                 image: tag,
                                 targetRepo: env.DOCKER_REGISTRY
                             )
-                            currentBuild.description += "<br/> ✔️ ${tag}"
+                            currentBuild.description += " ✔️ ${tag}"
                         }
                     }
                 }

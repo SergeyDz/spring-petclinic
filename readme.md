@@ -111,5 +111,7 @@ Application [deployed](http://20.121.234.160/) to AKS kubernetes cluster.
 * Automatic deployment to dev was not implemented as part of this pipeline.
 * Hook to start build automatically on each commit was not made.
 * Jenkins configuration as a code plugin and kubernetes secrets was not used. 
+* Deployed application shows error message inside menu, for sure need to fix this.
+* AKS cluster has no configured ingress or DNS names, only IPs - only hardcode.
 
 <hr/>

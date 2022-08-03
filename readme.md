@@ -103,6 +103,7 @@ All artifacts are scanning by xray.
 Application [deployed](http://20.121.234.160/) to AKS kubernetes cluster. 
 * [Helm](https://github.com/SergeyDz/spring-petclinic/tree/feature/jenkins-build/helm/spring-petclinic) for Kubernetes deployment 
 * [Argo Application](https://github.com/SergeyDz/spring-petclinic/tree/feature/jenkins-build/helm/spring-petclinic) to deploy the application in AKS
+![argo](./docs/argo-app.jpg)
 
 ## Known issues
 * Xray scan fails with strange 403 error.
